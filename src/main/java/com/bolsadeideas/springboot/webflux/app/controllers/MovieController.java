@@ -12,14 +12,14 @@ import com.bolsadeideas.springboot.webflux.app.models.documents.Movie;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@RestController
+@Controller
 public class MovieController {
 
     @Autowired
     private MovieDao movieDao;
 
     @GetMapping("/listar")
-    public Mono<String> listar(Model model) {
+    public String listar(Model model) {
 
         Flux<Movie> moviesFlux = movieDao.findAll();
 
@@ -27,8 +27,8 @@ public class MovieController {
         // encarga de iterar sobre ellas
         model.addAttribute("movies", moviesFlux);
         model.addAttribute("titulo", "Listado de Películas");
-        
-        return Mono.just("listar");
+
+        return "listar.html"; // el nombre de la vista, que se resuelve a listar.html
     }
 
     @GetMapping("/movies")
