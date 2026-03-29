@@ -6,6 +6,6 @@ spring:
       database: moviesdb
       host: localhost
       port: 27017
-# Puedes agregar aquí otras configuraciones, por ejemplo:
-# server:
-#   port: 8080
+  thymeleaf:
+    reactive:
+      max-chunk-size: 8192
