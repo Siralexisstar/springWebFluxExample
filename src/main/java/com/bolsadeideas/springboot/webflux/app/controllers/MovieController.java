@@ -23,8 +23,9 @@ public class MovieController {
     @Autowired
     private MovieDao movieDao;
 
+    //Este endpoint me puede ayudar para la parte de front end de Adjustments-UI
     @GetMapping("/listar-full")
-    public String listar(Model model) {
+    public String listarFull(Model model) {
 
         Flux<Movie> moviesFlux = movieDao.findAll()
                 .map(movie -> {
@@ -39,6 +40,25 @@ public class MovieController {
         model.addAttribute("titulo", "Listado de Películas");
 
         return "listar.html"; // el nombre de la vista, que se resuelve a listar.html
+    }
+
+
+    @GetMapping("/listar-chunksize")
+    public String listarChunkSize(Model model) {
+
+        Flux<Movie> moviesFlux = movieDao.findAll()
+                .map(movie -> {
+                    movie.setTitle(movie.getTitle().toUpperCase());
+                    return movie;
+                }).repeat(5000); // esto hace que se repita el flujo 5000 veces, para simular una gran cantidad
+                                 // de datos
+
+        // esto le pasa la vista todas las movies por atraves del modelo, y la vista se
+        // encarga de iterar sobre ellas
+        model.addAttribute("movies", moviesFlux);
+        model.addAttribute("titulo", "Listado de Películas");
+
+        return "listar-chunked.html"; // el nombre de la vista, que se resuelve a listar.html
     }
 
     @GetMapping("/listar-datadriver")
