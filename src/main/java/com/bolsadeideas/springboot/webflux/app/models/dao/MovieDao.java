@@ -8,6 +8,4 @@ import com.bolsadeideas.springboot.webflux.app.models.documents.Movie;
 @Component
 public interface MovieDao extends ReactiveMongoRepository<Movie, String> {
 
-
-    
 }
