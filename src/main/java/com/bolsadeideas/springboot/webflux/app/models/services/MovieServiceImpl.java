@@ -40,4 +40,14 @@ public class MovieServiceImpl implements MovieService {
         return movieDao.delete(movie);
     }
 
+    @Override
+    public Flux<Movie> findAllByTitleUpperCase() {
+
+        return movieDao.findAll()
+                .map(movie -> {
+                    movie.setTitle(movie.getTitle().toUpperCase());
+                    return movie;
+                });
+    }
+
 }

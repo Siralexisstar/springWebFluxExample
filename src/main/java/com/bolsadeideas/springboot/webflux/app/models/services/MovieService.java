@@ -12,6 +12,8 @@ public interface MovieService {
 
     Flux<Movie> findAll();
 
+    Flux<Movie> findAllByTitleUpperCase();
+
     Mono<Movie> findById(String id);
 
     Mono<Movie> save(Movie movie);

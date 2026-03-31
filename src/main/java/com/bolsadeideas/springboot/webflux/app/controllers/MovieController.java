@@ -2,21 +2,17 @@ package com.bolsadeideas.springboot.webflux.app.controllers;
 
 import java.time.Duration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
 
-import com.bolsadeideas.springboot.webflux.app.models.dao.MovieDao;
 import com.bolsadeideas.springboot.webflux.app.models.documents.Movie;
 import com.bolsadeideas.springboot.webflux.app.models.services.MovieServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @Slf4j
 @Controller
@@ -29,12 +25,10 @@ public class MovieController {
     @GetMapping("/listar-full")
     public String listarFull(Model model) {
 
-        Flux<Movie> moviesFlux = movieSerImpl.findAll()
-                .map(movie -> {
-                    movie.setTitle(movie.getTitle().toUpperCase());
-                    return movie;
-                }).repeat(5000); // esto hace que se repita el flujo 5000 veces, para simular una gran cantidad
-                                 // de datos
+        Flux<Movie> moviesFlux = movieSerImpl
+                .findAllByTitleUpperCase()
+                .repeat(5000); // esto hace que se repita el flujo 5000 veces, para simular una gran cantidad
+                               // de datos
 
         // esto le pasa la vista todas las movies por atraves del modelo, y la vista se
         // encarga de iterar sobre ellas
@@ -47,12 +41,10 @@ public class MovieController {
     @GetMapping("/listar-chunksize")
     public String listarChunkSize(Model model) {
 
-        Flux<Movie> moviesFlux = movieSerImpl.findAll()
-                .map(movie -> {
-                    movie.setTitle(movie.getTitle().toUpperCase());
-                    return movie;
-                }).repeat(5000); // esto hace que se repita el flujo 5000 veces, para simular una gran cantidad
-                                 // de datos
+        Flux<Movie> moviesFlux = movieSerImpl
+                .findAllByTitleUpperCase()
+                .repeat(5000); // esto hace que se repita el flujo 5000 veces, para simular una gran cantidad
+                               // de datos
 
         // esto le pasa la vista todas las movies por atraves del modelo, y la vista se
         // encarga de iterar sobre ellas
@@ -65,11 +57,9 @@ public class MovieController {
     @GetMapping("/listar-datadriver")
     public String listarDataDriver(Model model) {
 
-        Flux<Movie> moviesFlux = movieSerImpl.findAll()
-                .map(movie -> {
-                    movie.setTitle(movie.getTitle().toUpperCase());
-                    return movie;
-                }).delayElements(Duration.ofSeconds(1));
+        Flux<Movie> moviesFlux = movieSerImpl
+                .findAllByTitleUpperCase()
+                .delayElements(Duration.ofSeconds(1));
 
         moviesFlux.subscribe(movies -> log.info(movies.getTitle()));
 
