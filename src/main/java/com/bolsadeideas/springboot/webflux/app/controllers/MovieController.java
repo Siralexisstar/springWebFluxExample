@@ -11,23 +11,25 @@ import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
 
 import com.bolsadeideas.springboot.webflux.app.models.dao.MovieDao;
 import com.bolsadeideas.springboot.webflux.app.models.documents.Movie;
+import com.bolsadeideas.springboot.webflux.app.models.services.MovieServiceImpl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class MovieController {
 
-    @Autowired
-    private MovieDao movieDao;
+    private final MovieServiceImpl movieSerImpl;
 
-    //Este endpoint me puede ayudar para la parte de front end de Adjustments-UI
+    // Este endpoint me puede ayudar para la parte de front end de Adjustments-UI
     @GetMapping("/listar-full")
     public String listarFull(Model model) {
 
-        Flux<Movie> moviesFlux = movieDao.findAll()
+        Flux<Movie> moviesFlux = movieSerImpl.findAll()
                 .map(movie -> {
                     movie.setTitle(movie.getTitle().toUpperCase());
                     return movie;
@@ -42,11 +44,10 @@ public class MovieController {
         return "listar.html"; // el nombre de la vista, que se resuelve a listar.html
     }
 
-
     @GetMapping("/listar-chunksize")
     public String listarChunkSize(Model model) {
 
-        Flux<Movie> moviesFlux = movieDao.findAll()
+        Flux<Movie> moviesFlux = movieSerImpl.findAll()
                 .map(movie -> {
                     movie.setTitle(movie.getTitle().toUpperCase());
                     return movie;
@@ -64,7 +65,7 @@ public class MovieController {
     @GetMapping("/listar-datadriver")
     public String listarDataDriver(Model model) {
 
-        Flux<Movie> moviesFlux = movieDao.findAll()
+        Flux<Movie> moviesFlux = movieSerImpl.findAll()
                 .map(movie -> {
                     movie.setTitle(movie.getTitle().toUpperCase());
                     return movie;
@@ -80,12 +81,6 @@ public class MovieController {
         model.addAttribute("titulo", "Listado de Películas");
 
         return "listar.html";
-    }
-
-    @GetMapping("/movies")
-    public Mono<MovieDao> getMovies() {
-        // suele llamar al repository
-        return Mono.just(movieDao);
     }
 
 }
