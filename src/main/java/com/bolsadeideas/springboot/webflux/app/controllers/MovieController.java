@@ -6,7 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
 
 import com.bolsadeideas.springboot.webflux.app.models.documents.Movie;
@@ -18,6 +21,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
+@SessionAttributes("movie") // esto es para que el objeto movie se mantenga en la sesión, y no se pierda al
+                            // hacer un redirect, por ejemplo, al guardar una película, después de
+                            // guardarla, se hace un redirect a listar, y si no se mantiene en la sesión, se
+                            // pierde el objeto movie, y no se puede mostrar un mensaje de éxito o error en
+                            // la vista listar, porque el objeto movie ya no está disponible
 @Controller
 @RequiredArgsConstructor
 public class MovieController {
@@ -86,7 +94,7 @@ public class MovieController {
 
         return "listar.html";
     }
-    
+
     // Crear nuevo registro pero con un endpoint REST REACTIVO
     @GetMapping("/crear")
     public Mono<String> ceateMovie(Model model) {
@@ -98,9 +106,27 @@ public class MovieController {
         return Mono.just("form.html");
     }
 
-    // Guardar pelicula con POST
-    @PostMapping("/crear")
-    public Mono<String> saveMovie(@ModelAttribute Movie movie) {
+    @GetMapping("editar/{id}")
+    public Mono<String> findById(@PathVariable String id, Model model) {
+        return movieSerImpl.findById(id)
+                .doOnNext(movie -> log.info("Movie found: " + movie.getTitle() + " with id: " + movie.getId()))
+                .flatMap(movie -> {
+                    model.addAttribute("movie", movie);
+                    model.addAttribute("title", "Editar Pelicula");
+                    return Mono.just("form.html");
+                })
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.warn("Movie with id: " + id + " not found");
+                    return Mono.just("redirect:/listar");
+                }));
+    }
+
+    @PostMapping("/form")
+    public Mono<String> saveMovie(@ModelAttribute Movie movie, SessionStatus status) {
+        status.setComplete(); // esto es para limpiar la sesión después de guardar la película, para que no se
+                              // mantenga el objeto movie en la sesión después de guardar, y no se pueda
+                              // mostrar un mensaje de éxito o error en la vista listar, porque el objeto
+                              // movie ya no está disponible
         return movieSerImpl.save(movie)
                 .doOnNext(data -> {
                     log.info("Movie saved: " + data.getTitle() + " with id: " + data.getId());

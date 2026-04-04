@@ -32,7 +32,7 @@ public class SpringBootWebfluxApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		// Inserta los datos sin borrar la colección
-		mongoTemplate.dropCollection("movies").subscribe();
+	/* 	mongoTemplate.dropCollection("movies").subscribe();
 		Flux.just(
 				Movie.builder()
 						.title("PRUEBA CAMPERA")
@@ -66,6 +66,7 @@ public class SpringBootWebfluxApplication implements CommandLineRunner {
 						.build())
 				.flatMap(movie -> movieDao.save(movie))
 				.subscribe(movie -> log.info("Inserted well movie: " + movie.getTitle()));
-	}
+	*/
+				}
 
 }

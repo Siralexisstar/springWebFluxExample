@@ -8,7 +8,7 @@
     <div class="container">
         <h1 th:text="${title}">Formulario de Película</h1>
         <a class="back-link" th:href="@{/listar}">← Listar Películas</a>
-        <form th:action="@{/crear}" method="post" th:object="${movie}">
+        <form th:action="@{/form}" method="post" th:object="${movie}">
             <div>
                 <label for="title">Título:</label>
                <div> <input type="text" id="title" name="title" th:field="*{title}" required maxlength="100" placeholder="Título de la película"></div>
