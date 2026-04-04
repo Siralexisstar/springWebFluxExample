@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Formulario de Película</title>
+</head>
+<body>
+    <div class="container">
+        <h1 th:text="${title}">Formulario de Película</h1>
+        <a class="back-link" th:href="@{/listar}">← Listar Películas</a>
+        <form th:action="@{/crear}" method="post" th:object="${movie}">
+            <div>
+                <label for="title">Título:</label>
+               <div> <input type="text" id="title" name="title" th:field="*{title}" required maxlength="100" placeholder="Título de la película"></div>
+            </div>
+            <div>
+                <label for="directors">Director:</label>
+             <div>   <input type="text" id="directors" name="directors" th:field="*{directors}" required maxlength="100" placeholder="Nombre del director"></div>
+            </div>
+            <div>
+                <label for="year">Año:</label>
+             <div>   <input type="number" id="year" name="year" th:field="*{year}" required min="1888" max="2100" placeholder="Año de estreno"></div>
+            </div>
+            <div>
+                <label for="rated">Calificación:</label>
+             <div>   <input type="number" id="rated" name="rated" th:field="*{rated}" required maxlength="10" placeholder="Calificación de la película"></div>
+            </div>
+            <div>
+                <label for="genres">Género:</label>
+             <div>   <input type="text" id="genres" name="genres" th:field="*{genres}" required maxlength="50" placeholder="Género de la película"></div>
+            </div>
+            <div>
+                <label for="cast">Reparto:</label>
+             <div>   <input type="text" id="cast" name="cast" th:field="*{cast}" required maxlength="200" placeholder="Reparto de la película"></div>
+            </div>
+              <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>

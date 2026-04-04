@@ -5,6 +5,8 @@ import java.time.Duration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
 
 import com.bolsadeideas.springboot.webflux.app.models.documents.Movie;
@@ -13,6 +15,7 @@ import com.bolsadeideas.springboot.webflux.app.models.services.MovieServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Controller
@@ -71,6 +74,38 @@ public class MovieController {
         model.addAttribute("titulo", "Listado de Películas");
 
         return "listar.html";
+    }
+
+    @GetMapping("/listar")
+    public String listar(Model model) {
+        Flux<Movie> moviesFlux = movieSerImpl
+                .findAll();
+
+        model.addAttribute("movies", moviesFlux);
+        model.addAttribute("titulo", "Listado de Películas");
+
+        return "listar.html";
+    }
+    
+    // Crear nuevo registro pero con un endpoint REST REACTIVO
+    @GetMapping("/crear")
+    public Mono<String> ceateMovie(Model model) {
+
+        // Creamos formulario de pelicula
+        model.addAttribute("movie", new Movie());
+        model.addAttribute("title", "Crear Pelicula");
+
+        return Mono.just("form.html");
+    }
+
+    // Guardar pelicula con POST
+    @PostMapping("/crear")
+    public Mono<String> saveMovie(@ModelAttribute Movie movie) {
+        return movieSerImpl.save(movie)
+                .doOnNext(data -> {
+                    log.info("Movie saved: " + data.getTitle() + " with id: " + data.getId());
+                })
+                .thenReturn("redirect:/listar");
     }
 
 }

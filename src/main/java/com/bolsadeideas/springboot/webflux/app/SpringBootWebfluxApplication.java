@@ -35,7 +35,6 @@ public class SpringBootWebfluxApplication implements CommandLineRunner {
 		mongoTemplate.dropCollection("movies").subscribe();
 		Flux.just(
 				Movie.builder()
-						.id("1")
 						.title("PRUEBA CAMPERA")
 						.genres(new ArrayList<>(Arrays.asList("Drama")))
 						.runtime(142)
@@ -46,7 +45,6 @@ public class SpringBootWebfluxApplication implements CommandLineRunner {
 						.type("movie")
 						.build(),
 				Movie.builder()
-						.id("2")
 						.title("The Godfather")
 						.genres(new ArrayList<>(Arrays.asList("Crime", "Drama")))
 						.runtime(175)
@@ -57,7 +55,6 @@ public class SpringBootWebfluxApplication implements CommandLineRunner {
 						.type("movie")
 						.build(),
 				Movie.builder()
-						.id("3")
 						.title("The Dark Knight")
 						.genres(new ArrayList<>(Arrays.asList("Action", "Crime", "Drama")))
 						.runtime(152)

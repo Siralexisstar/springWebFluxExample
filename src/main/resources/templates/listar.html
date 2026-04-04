@@ -6,8 +6,10 @@
 </head>
 <body>
     <h1 th:text="${titulo}">Hola Mundo</h1>
+    <!-- /* Esta es la ruta para crear una pelicula */-->
+    <a th:href="@{/crear}">Crear Pelicula</a>
 
-    <table>
+    <table border="1">
         <thead>
             <tr>
                 <th>Title</th>
