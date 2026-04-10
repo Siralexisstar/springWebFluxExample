@@ -25,7 +25,7 @@
                     <td th:text="${movie.directors}">Director</td>
                     <td th:text="${movie.year}">Year</td>
                     <td th:text="${movie.rated}">Rating</td>
-                    <td ><a th:href="@{/editar/{id}(id=${movie.id})}">Editar</a></td>
+                    <td ><a th:href="@{/form/{id}(id=${movie.id})}">Editar</a></td>
             </tr>
         </tbody>
     </table>

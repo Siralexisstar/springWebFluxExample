@@ -11,3 +11,6 @@ spring:
     # le decimos a thymeleaf que el nombre de la vista para el modo chunked es listar-chunked.html, y el tamaño máximo del chunk es de 8192 bytes
       chunked-mode-view-names: listar-chunked.html
       max-chunk-size: 8192
+logging:
+  level:
+    root: ERROR

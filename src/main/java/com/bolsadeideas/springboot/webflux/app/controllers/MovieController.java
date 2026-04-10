@@ -106,7 +106,10 @@ public class MovieController {
         return Mono.just("form.html");
     }
 
-    @GetMapping("editar/{id}")
+
+
+
+    @GetMapping("form/{id}")
     public Mono<String> findById(@PathVariable String id, Model model) {
         return movieSerImpl.findById(id)
                 .doOnNext(movie -> log.info("Movie found: " + movie.getTitle() + " with id: " + movie.getId()))
