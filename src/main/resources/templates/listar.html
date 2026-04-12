@@ -5,6 +5,10 @@
     <title th:text="${titulo}">Document</title>
 </head>
 <body>
+
+    <div th:if="${param.error}" th:text="${param.error}"></div>
+    <div th:if="${param.success}" th:text="${param.success}"></div>
+
     <h1 th:text="${titulo}">Hola Mundo</h1>
     <!-- /* Esta es la ruta para crear una pelicula */-->
     <a th:href="@{/crear}">Crear Pelicula</a>

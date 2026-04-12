@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
 import com.bolsadeideas.springboot.webflux.app.models.documents.Movie;
 import com.bolsadeideas.springboot.webflux.app.models.services.MovieServiceImpl;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
@@ -106,9 +108,6 @@ public class MovieController {
         return Mono.just("form.html");
     }
 
-
-
-
     @GetMapping("form/{id}")
     public Mono<String> findById(@PathVariable String id, Model model) {
         return movieSerImpl.findById(id)
@@ -118,23 +117,42 @@ public class MovieController {
                     model.addAttribute("title", "Editar Pelicula");
                     return Mono.just("form.html");
                 })
-                .switchIfEmpty(Mono.defer(() -> {
-                    log.warn("Movie with id: " + id + " not found");
-                    return Mono.just("redirect:/listar");
-                }));
+                .switchIfEmpty(Mono.just("redirect:/listar?error=this+movie+actually+does+not+exist"))
+                .onErrorResume(ex -> {
+                    log.error("Error occurred while finding movie with id: " + id, ex);
+                    return Mono.just("redirect:/listar?error=FATAL+ERROR+OCCURRED+WHILE+FINDING+MOVIE");
+                });
     }
 
     @PostMapping("/form")
-    public Mono<String> saveMovie(@ModelAttribute Movie movie, SessionStatus status) {
-        status.setComplete(); // esto es para limpiar la sesión después de guardar la película, para que no se
-                              // mantenga el objeto movie en la sesión después de guardar, y no se pueda
-                              // mostrar un mensaje de éxito o error en la vista listar, porque el objeto
-                              // movie ya no está disponible
+    public Mono<String> saveMovie(@Valid @ModelAttribute Movie movie, BindingResult result, SessionStatus status,
+            Model model) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("movie", movie);
+            model.addAttribute("title", "Errores en el formulario");
+            log.error("Validation errors occurred while saving movie: " + result.getAllErrors());
+            return Mono.just("form.html");
+        } else {
+            status.setComplete();
+        }
+
         return movieSerImpl.save(movie)
                 .doOnNext(data -> {
                     log.info("Movie saved: " + data.getTitle() + " with id: " + data.getId());
                 })
-                .thenReturn("redirect:/listar");
+                .thenReturn("redirect:/listar?success=Movie+saved+successfully");
+    }   
+
+    @GetMapping("/eliminar/{id}")
+    public Mono<String> deleteMovie(@PathVariable String id) {
+        return movieSerImpl.findById(id)
+                .flatMap(p -> {
+                    return movieSerImpl.delete(p)
+                            .then(Mono.just("redirect:/listar?success=Movie+deleted+successfully"));
+                });
     }
+
+    
 
 }
