@@ -142,17 +142,26 @@ public class MovieController {
                     log.info("Movie saved: " + data.getTitle() + " with id: " + data.getId());
                 })
                 .thenReturn("redirect:/listar?success=Movie+saved+successfully");
-    }   
+    }
 
     @GetMapping("/eliminar/{id}")
     public Mono<String> deleteMovie(@PathVariable String id) {
         return movieSerImpl.findById(id)
+                .defaultIfEmpty(new Movie())
                 .flatMap(p -> {
-                    return movieSerImpl.delete(p)
-                            .then(Mono.just("redirect:/listar?success=Movie+deleted+successfully"));
-                });
+                    if (p.getId() == null) {
+                        return Mono.error(new RuntimeException("Movie not found"));
+                    }
+                    return Mono.just(p);
+                })
+               // .doOnNext(value -> log.info("Movie to delete: " + value.getTitle() + " with id: " + value.getId()))
+                .flatMap(p -> {
+                    return movieSerImpl.delete(p);
+                })
+                .doOnSuccess(value -> log.info("Movie deleted properly with id: " + id))    
+                .then(Mono.just("redirect:/listar?success=Movie+deleted+successfully"))
+                .doOnError(ex -> log.error("Error occurred while deleting movie with id: " + id, ex))
+                .onErrorResume(ex -> Mono.just("redirect:/listar?error=Error+occurred+while+deleting+movie"));
     }
-
-    
 
 }
