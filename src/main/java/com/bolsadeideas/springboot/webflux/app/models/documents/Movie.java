@@ -40,4 +40,6 @@ public class Movie {
     private ArrayList<String> cast;
 
     private String type;
+
+    private Category categoria;
 }

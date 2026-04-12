@@ -11,7 +11,7 @@
 
     <h1 th:text="${titulo}">Hola Mundo</h1>
     <!-- /* Esta es la ruta para crear una pelicula */-->
-    <a th:href="@{/crear}">Crear Pelicula</a>
+    <a th:href="@{/crear}">Crear Movie</a>
 
     <table border="1">
         <thead>
@@ -20,7 +20,8 @@
                 <th>Director</th>
                 <th>Year</th>
                 <th>Rating</th>
-                <th>Listar</th>
+                <th>List</th>
+                <th>Eliminar</th>
             </tr>
         </thead>
         <tbody>
@@ -29,7 +30,8 @@
                     <td th:text="${movie.directors}">Director</td>
                     <td th:text="${movie.year}">Year</td>
                     <td th:text="${movie.rated}">Rating</td>
-                    <td ><a th:href="@{/form/{id}(id=${movie.id})}">Editar</a></td>
+                    <td ><a th:href="@{/form/{id}(id=${movie.id})}">Edit</a></td>
+                    <td><a th:href="@{/eliminar/{id}(id=${movie.id})}" onclick="return confirm('Are you sure?')">Eliminar</a></td>
             </tr>
         </tbody>
     </table>

@@ -1,5 +1,6 @@
 package com.bolsadeideas.springboot.webflux.app.models.services;
 
+import com.bolsadeideas.springboot.webflux.app.models.documents.Category;
 import com.bolsadeideas.springboot.webflux.app.models.documents.Movie;
 
 import reactor.core.publisher.Flux;
@@ -19,5 +20,11 @@ public interface MovieService {
     Mono<Movie> save(Movie movie);
 
     Mono<Void> delete(Movie movie);
+
+    Flux<Category> findAllCategories();
+
+    Mono<Category> findCategoryById(String id);
+
+    Mono<Category> saveCategory(Category category);
 
 }
