@@ -35,7 +35,7 @@ public class MovieController {
 
     private final MovieServiceImpl movieSerImpl;
 
-    //To return allCategories
+    // To return allCategories
     @ModelAttribute("categories")
     public Flux<Category> categories() {
         return movieSerImpl.findAllCategories();
@@ -144,11 +144,19 @@ public class MovieController {
             status.setComplete();
         }
 
-        return movieSerImpl.save(movie)
-                .doOnNext(data -> {
-                    log.info("Movie saved: " + data.getTitle() + " with id: " + data.getId());
-                })
-                .thenReturn("redirect:/listar?success=Movie+saved+successfully");
+        // Para hacer la asociación de la pelicula con la categoria
+        Mono<Category> categoryMono = movieSerImpl.findCategoryById(movie.getCategory().getId());
+
+        // Si la categoría no existe, se lanza un error, y se redirige a la vista listar
+        // con un mensaje de error, si la categoría existe, se asocia a la película, se
+        // guarda la película, y se redirige a la vista listar con un mensaje de éxito
+        return categoryMono.flatMap(c -> {
+            movie.setCategory(c);
+            return movieSerImpl.save(movie);
+        }).doOnNext(data -> {
+            log.info("Category found:" + data.getCategory().getName() + " with id: " + data.getCategory().getId());
+            log.info("Movie saved: " + data.getTitle() + " with id: " + data.getId());
+        }).thenReturn("redirect:/listar?success=Movie+saved+successfully");
     }
 
     @GetMapping("/eliminar/{id}")
@@ -161,11 +169,12 @@ public class MovieController {
                     }
                     return Mono.just(p);
                 })
-               // .doOnNext(value -> log.info("Movie to delete: " + value.getTitle() + " with id: " + value.getId()))
+                // .doOnNext(value -> log.info("Movie to delete: " + value.getTitle() + " with
+                // id: " + value.getId()))
                 .flatMap(p -> {
                     return movieSerImpl.delete(p);
                 })
-                .doOnSuccess(value -> log.info("Movie deleted properly with id: " + id))    
+                .doOnSuccess(value -> log.info("Movie deleted properly with id: " + id))
                 .then(Mono.just("redirect:/listar?success=Movie+deleted+successfully"))
                 .doOnError(ex -> log.error("Error occurred while deleting movie with id: " + id, ex))
                 .onErrorResume(ex -> Mono.just("redirect:/listar?error=Error+occurred+while+deleting+movie"));

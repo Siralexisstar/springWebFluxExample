@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -41,6 +42,7 @@ public class Movie {
 
     private String type;
 
+    @Valid
     private Category category;
 
 

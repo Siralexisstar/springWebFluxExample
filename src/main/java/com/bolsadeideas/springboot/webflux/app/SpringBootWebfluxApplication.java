@@ -35,7 +35,7 @@ public class SpringBootWebfluxApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		// Inserta los datos sin borrar la colección
 		mongoTemplate.dropCollection("movies").subscribe();
-		// mongoTemplate.dropCollection("categories").subscribe();
+		mongoTemplate.dropCollection("categories").subscribe();
 
 		Category categoria = new Category()
 				.builder()
