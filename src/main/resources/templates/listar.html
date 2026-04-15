@@ -20,6 +20,7 @@
                 <th>Director</th>
                 <th>Year</th>
                 <th>Rating</th>
+                <th>Category</th>
                 <th>List</th>
                 <th>Eliminar</th>
             </tr>
@@ -30,6 +31,7 @@
                     <td th:text="${movie.directors}">Director</td>
                     <td th:text="${movie.year}">Year</td>
                     <td th:text="${movie.rated}">Rating</td>
+                    <td th:text  ="${movie.category.name}">Category</td>
                     <td ><a th:href="@{/form/{id}(id=${movie.id})}">Edit</a></td>
                     <td><a th:href="@{/eliminar/{id}(id=${movie.id})}" onclick="return confirm('Are you sure?')">Eliminar</a></td>
             </tr>

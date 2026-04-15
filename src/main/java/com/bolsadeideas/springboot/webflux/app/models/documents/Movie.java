@@ -41,5 +41,7 @@ public class Movie {
 
     private String type;
 
-    private Category categoria;
+    private Category category;
+
+
 }

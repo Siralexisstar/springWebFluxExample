@@ -2,7 +2,9 @@ package com.bolsadeideas.springboot.webflux.app.models.services;
 
 import org.springframework.stereotype.Service;
 
+import com.bolsadeideas.springboot.webflux.app.models.dao.CategoriaDao;
 import com.bolsadeideas.springboot.webflux.app.models.dao.MovieDao;
+import com.bolsadeideas.springboot.webflux.app.models.documents.Category;
 import com.bolsadeideas.springboot.webflux.app.models.documents.Movie;
 
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,8 @@ import reactor.core.publisher.Mono;
 public class MovieServiceImpl implements MovieService {
 
     private final MovieDao movieDao;
+
+    private final CategoriaDao categoriaDao;
 
     @Override
     public Flux<Movie> findAll() {
@@ -48,6 +52,24 @@ public class MovieServiceImpl implements MovieService {
                     movie.setTitle(movie.getTitle().toUpperCase());
                     return movie;
                 });
+    }
+
+    @Override
+    public Flux<Category> findAllCategories() {
+
+        return categoriaDao.findAll();
+    }
+
+    @Override
+    public Mono<Category> findCategoryById(String id) {
+
+        return categoriaDao.findById(id);
+    }
+
+    @Override
+    public Mono<Category> saveCategory(Category category) {
+        
+        return categoriaDao.save(category);
     }
 
 }

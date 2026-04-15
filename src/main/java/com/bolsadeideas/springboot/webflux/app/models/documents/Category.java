@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "categorias")
+@Document(collection = "categories")
 public class Category {
 
     @Id
     private String id;
-    private String nombre;
+    private String name;
 
 }

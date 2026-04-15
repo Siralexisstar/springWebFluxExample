@@ -30,15 +30,15 @@
         <div>
           <label for="directors">Director:</label>
           <div>
-            <input
-              type="text"
-              id="directors"
-              name="directors"
-              th:field="*{directors}"
-              required
-              maxlength="100"
-              placeholder="Nombre del director"
-            />
+              <input
+                type="text"
+                id="directors"
+                name="directors"
+                th:field="*{directors}"
+                required
+                maxlength="200"
+                placeholder="Nombres de los directores (separados por coma)"
+              />
           </div>
           <small
             th:if="${#fields.hasErrors('directors')}"
@@ -67,15 +67,15 @@
         <div>
           <label for="rated">Calificación:</label>
           <div>
-            <input
-              type="number"
-              id="rated"
-              name="rated"
-              th:field="*{rated}"
-              required
-              maxlength="10"
-              placeholder="Calificación de la película"
-            />
+              <input
+                type="text"
+                id="rated"
+                name="rated"
+                th:field="*{rated}"
+                required
+                maxlength="10"
+                placeholder="Calificación de la película"
+              />
           </div>
           <small
             th:if="${#fields.hasErrors('rated')}"
@@ -85,15 +85,15 @@
         <div>
           <label for="genres">Género:</label>
           <div>
-            <input
-              type="text"
-              id="genres"
-              name="genres"
-              th:field="*{genres}"
-              required
-              maxlength="50"
-              placeholder="Género de la película"
-            />
+              <input
+                type="text"
+                id="genres"
+                name="genres"
+                th:field="*{genres}"
+                required
+                maxlength="200"
+                placeholder="Géneros (separados por coma)"
+              />
           </div>
           <small
             th:if="${#fields.hasErrors('genres')}"
@@ -103,19 +103,36 @@
         <div>
           <label for="cast">Reparto:</label>
           <div>
-            <input
-              type="text"
-              id="cast"
-              name="cast"
-              th:field="*{cast}"
-              required
-              maxlength="200"
-              placeholder="Reparto de la película"
-            />
+              <input
+                type="text"
+                id="cast"
+                name="cast"
+                th:field="*{cast}"
+                required
+                maxlength="300"
+                placeholder="Reparto (separado por coma)"
+              />
           </div>
           <small
             th:if="${#fields.hasErrors('cast')}"
             th:errors="*{cast}"
+          ></small>
+        </div>
+        <div>
+          <label for="category.id">Categoría:</label>
+          <div>
+            <select th:field="*{category.id}">
+              <option value="" disabled selected>Seleccione una categoría</option>
+              <option
+                th:each="category : ${categories}"
+                th:value="${category.id}"
+                th:text="${category.name}"
+              ></option>
+            </select>
+          </div>
+          <small
+            th:if="${#fields.hasErrors('category.id')}"
+            th:errors="*{category.id}"
           ></small>
         </div>
         <input type="submit" value="Submit" />

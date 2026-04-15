@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
 
+import com.bolsadeideas.springboot.webflux.app.models.documents.Category;
 import com.bolsadeideas.springboot.webflux.app.models.documents.Movie;
 import com.bolsadeideas.springboot.webflux.app.models.services.MovieServiceImpl;
 
@@ -33,6 +34,12 @@ import reactor.core.publisher.Mono;
 public class MovieController {
 
     private final MovieServiceImpl movieSerImpl;
+
+    //To return allCategories
+    @ModelAttribute("categories")
+    public Flux<Category> categories() {
+        return movieSerImpl.findAllCategories();
+    }
 
     // Este endpoint me puede ayudar para la parte de front end de Adjustments-UI
     @GetMapping("/listar-full")
